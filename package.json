@@ -5,15 +5,21 @@
   "main": "index.html",
   "scripts": {
     "start": "run-script-os",
-    "start:linux:darwin": "concurrently \"node ./node_modules/.bin/http-server -a localhost -p 8081\"  \"sleep 1 && open http://localhost:8081\"",
+    "start:linux:darwin": "concurrently \"node ./node_modules/.bin/http-server -a localhost -p 5500\"  \"sleep 1 && open http://localhost:5500\"",
     "start:win32": "node node_modules/live-server/live-server --port=8081"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@angular/cli": "^7.0.2",
     "concurrently": "^5.2.0",
+    "express": "^4.17.2",
     "http-server": "^0.11.1",
     "live-server": "^1.2.1",
-    "run-script-os": "^1.0.7"
+    "node": "16.0",
+    "node-sass": "6.0"
+  },
+  "devDependencies": {
+    "run-script-os": "^1.1.6"
   }
 }
