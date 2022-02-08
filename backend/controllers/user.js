@@ -1,4 +1,4 @@
-const User = require("../models/User");
+const User = require("../models/user");
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const cryptojs = require('crypto-js');
@@ -34,7 +34,7 @@ exports.login = (req, res, next) => {
     const researchCryptMail = cryptojs.HmacSHA256(req.body.email, process.env.KEY_EMAIL_SECRET).toString();
 
     User.find({
-            researchCryptMail
+            email: researchCryptMail
         })
         .then(user => {
             if (!user) {
@@ -49,20 +49,15 @@ exports.login = (req, res, next) => {
                             error: 'Mot de passe incorrect !'
                         });
                     }
-                    const newToken = jwt.sign(
-
-                        {
-                            userId: user._id
-                        },
-                        process.env.SECRET_TOKEN, {
-                            expiresIn: '24h'
-                        }
-
-                    );
-                    req.session.token = newToken;
                     res.status(200).json({
                         userId: user._id,
-                        token: newToken
+                        token: jwt.sign({
+                                userId: user._id
+                            },
+                            process.env.SECRET_TOKEN, {
+                                expiresIn: '24h'
+                            }
+                        )
                     });
                 })
                 .catch(error => res.status(500).json({
