@@ -30,12 +30,12 @@ exports.signup = (req, res, next) => {
         }));
 };
 
-exports.login = (req, res, next) => {
-    const researchCryptMail = cryptojs.HmacSHA256(req.body.email, process.env.KEY_EMAIL_SECRET).toString();
 
-    User.find({
-            email: researchCryptMail
-        })
+
+exports.login = (req, res, next) => {
+
+    const researchCryptMail = cryptojs.HmacSHA256(req.body.email, process.env.KEY_EMAIL_SECRET).toString();
+    User.findOne({email: researchCryptMail})
         .then(user => {
             if (!user) {
                 return res.status(401).json({
@@ -67,5 +67,4 @@ exports.login = (req, res, next) => {
         .catch(error => res.status(500).json({
             error
         }));
-
 };
