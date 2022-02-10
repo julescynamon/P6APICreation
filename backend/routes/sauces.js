@@ -5,6 +5,8 @@ const auth = require('../middlewares/authorize');
 
 const saucesControls = require('../controllers/sauces');
 
+// Mise en place des chemins d'acces au routes en incluant les middleware Multer et authorize
+
 router.get("/", auth, saucesControls.getAllSauces);
 router.get("/:id", auth, saucesControls.getOneSauce);
 router.post("/", auth, multer, saucesControls.createSauce);

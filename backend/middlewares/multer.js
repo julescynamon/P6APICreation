@@ -1,5 +1,7 @@
 const multer = require('multer');
 
+// Mise en place d'un middleware avec multer qui est un  package qui nous permet de gérer les fichiers entrants dans les requêtes HTTP
+
 const MIME_TYPES = {
     'image/jpg': 'jpg',
     'image/jpeg': 'jpg',

@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 
+// Creation d'un schema de donnee pour la base de donnee de nos sauces
 
 const saucesShema = mongoose.Schema({
 

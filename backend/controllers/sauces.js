@@ -1,7 +1,7 @@
 const Sauce = require('../models/sauces');
 const fs = require('fs');
 
-
+// Middleware pour recuperer toutes les sauces enregistrer
 exports.getAllSauces = (req, res, next) => {
 
     Sauce.find()
@@ -12,6 +12,7 @@ exports.getAllSauces = (req, res, next) => {
 
 };
 
+// Middleware pour recuperer une sauce en particulier
 exports.getOneSauce = (req, res, next) => {
 
     Sauce.findOne({
@@ -24,6 +25,7 @@ exports.getOneSauce = (req, res, next) => {
 
 };
 
+// Middleware pour creer une sauce sur le site 
 exports.createSauce = (req, res, next) => {
 
     const sauceModel = JSON.parse(req.body.sauce);
@@ -48,6 +50,7 @@ exports.createSauce = (req, res, next) => {
 
 };
 
+// Middleware pour modifier une sauce deja presente dans la base de donnee et appartenant bien au meme userId
 exports.updateSauce = (req, res, next) => {
 
     const sauceModel = req.file ? {
@@ -71,6 +74,7 @@ exports.updateSauce = (req, res, next) => {
 
 };
 
+// Middleware pour supprimer une sauce deja presente dans la base de donnee et appartenant bien au meme userId
 exports.deleteSauce = (req, res, next) => {
 
     Sauce.findOne({

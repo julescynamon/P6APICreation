@@ -5,7 +5,7 @@ const cryptojs = require('crypto-js');
 
 require('dotenv').config();
 
-
+// Middleware pour enregistrer un nouvel utilisateur
 exports.signup = (req, res, next) => {
 
     bcrypt.hash(req.body.password, 10)
@@ -31,11 +31,13 @@ exports.signup = (req, res, next) => {
 };
 
 
-
+// Middleware pour authentifier un utilisateur en mettant en place un token
 exports.login = (req, res, next) => {
 
     const researchCryptMail = cryptojs.HmacSHA256(req.body.email, process.env.KEY_EMAIL_SECRET).toString();
-    User.findOne({email: researchCryptMail})
+    User.findOne({
+            email: researchCryptMail
+        })
         .then(user => {
             if (!user) {
                 return res.status(401).json({
