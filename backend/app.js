@@ -20,11 +20,17 @@ mongoose.connect(process.env.SECRET_MONGOOSE, {
 const app = express();
 
 // Utilisation de Helmet pour respecter les standars de securite, Helmet nous aide à protéger notre application de certaines des vulnérabilités bien connues du Web en configurant de manière appropriée des en-têtes HTTP.
-app.use(helmet());
+// app.use(helmet());
 app.use((req, res, next) => {
-    res.setHeader('Access-Control-Allow-Origin', '*'); // tous le monde à acces à l'api
-    res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS'); // acces a certaine requetes.
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader(
+        "Access-Control-Allow-Headers",
+        "Origin, X-Requested-With, Content, Accept, Content-Type, Authorization"
+    );
+    res.setHeader(
+        "Access-Control-Allow-Methods",
+        "GET, POST, PUT, DELETE, PATCH, OPTIONS"
+    );
     next();
 });
 
