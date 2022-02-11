@@ -34,10 +34,12 @@ const saucesShema = mongoose.Schema({
     },
     likes: {
         type: Number,
+        defaut: 0,
         required: true
     },
     dislikes: {
         type: Number,
+        defaut:0,
         required: true
     },
     usersLiked: {
