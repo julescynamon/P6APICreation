@@ -99,3 +99,119 @@ exports.deleteSauce = (req, res, next) => {
         }));
 
 };
+
+
+// Middleware pour gerer les likes et dislikes de mon applications
+exports.likeDislikeSauce = (req, res, next) => {
+
+    let like = req.body.like;
+    let userId = req.body.userId;
+    let sauceId = req.params.id;
+
+    switch (like) {
+        
+        case 1:
+            // premier cas l'utilisateur mais un like a la sauce
+            Sauce.updateOne({
+                    _id: sauceId
+                }, {
+                    $push: {
+                        usersLiked: userId
+                    }
+                }, {
+                    $inc: {
+                        likes: +1
+                    }
+                })
+                .then(() => res.status(200).json({
+                    message: `L'utilisateur aime la sauce`
+                }))
+                .catch((error) => res.status(400).json({
+                    error
+                }))
+
+            break;
+
+        case 0:
+            // deuxieme cas l'utilisateur mais 0 like a la sauce
+            Sauce.findOne({
+                    _id: sauceId
+                })
+                .then((sauce) => {
+                    // Si dans le tableau j'aime il y a deja un userId j'enleve un like
+                    if (sauce.usersLiked.includes(userId)) {
+
+                        Sauce.updateOne({
+                                _id: sauceId
+                            }, {
+                                $pull: {
+                                    usersLiked: userId
+                                },
+                                $inc: {
+                                    likes: -1
+                                }
+                            })
+                            .then(() => res.status(200).json({
+                                message: `L'utilisateur reste neutre`
+                            }))
+                            .catch((error) => res.status(400).json({
+                                error
+                            }))
+
+                    }
+                    // Si dans le tableau je n'aime pas il y a deja un userId j'enleve un dislike
+                    if (sauce.usersDisliked.includes(userId)) {
+
+                        Sauce.updateOne({
+                                _id: sauceId
+                            }, {
+                                $pull: {
+                                    usersDisliked: userId
+                                },
+                                $inc: {
+                                    dislikes: -1
+                                }
+                            })
+                            .then(() => res.status(200).json({
+                                message: `L'utilisateur reste neutre`
+                            }))
+                            .catch((error) => res.status(400).json({
+                                error
+                            }))
+
+                    }
+
+                })
+                .catch((error) => res.status(400).json({
+                    error
+                }))
+
+            break;
+
+        case -1:
+            // troisieme cas l'utilisateur mais un dislike a la sauce
+            Sauce.updateOne({
+                    _id: sauceId
+                }, {
+                    $push: {
+                        usersDisliked: userId
+                    }
+                }, {
+                    $inc: {
+                        Dislikes: +1
+                    }
+                })
+                .then(() => res.status(200).json({
+                    message: `L'utilisateur n'aime pas la sauce`
+                }))
+                .catch((error) => res.status(400).json({
+                    error
+                }))
+
+            break;
+
+        default:
+            console.log('une erreur a eu lieu ');
+    }
+
+};
