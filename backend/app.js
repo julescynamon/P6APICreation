@@ -1,5 +1,8 @@
+// Mise en place de notre application express
 const express = require('express');
+// Mise en place de la base de donnee Mongoose
 const mongoose = require('mongoose');
+// Mise en place du package Helmet pour pour pouvoir respecter les standars de securite
 const helmet = require('helmet');
 // mise en place du package path pour accéder au path de notre serveur
 const path = require('path');

@@ -112,6 +112,7 @@ exports.likeDislikeSauce = (req, res, next) => {
     switch (like) {
         // premier cas l'utilisateur mais un like a la sauce
         case 1:
+            // Mise a jour de la base de donnee
             Sauce.updateOne({
                     _id: sauceId
                 }, {
@@ -127,18 +128,20 @@ exports.likeDislikeSauce = (req, res, next) => {
                 }))
                 .catch((error) => res.status(400).json({
                     error
-                }))
+                }));
 
             break;
 
         case 0:
             // deuxieme cas l'utilisateur mais 0 like a la sauce
+            // 
             Sauce.findOne({
                     _id: sauceId
                 })
                 // Si dans le tableau j'aime il y a deja un userId j'enleve un like
                 .then((sauce) => {
                     if (sauce.usersLiked.includes(userId)) {
+                        // Mise a jour de la base de donnee
                         Sauce.updateOne({
                                 _id: sauceId
                             }, {
@@ -154,10 +157,11 @@ exports.likeDislikeSauce = (req, res, next) => {
                             }))
                             .catch((error) => res.status(400).json({
                                 error
-                            }))
-                    }
+                            }));
+                    };
                     // Si dans le tableau je n'aime pas il y a deja un userId j'enleve un dislike
                     if (sauce.usersDisliked.includes(userId)) {
+                        // Mise a jour de la base de donnee
                         Sauce.updateOne({
                                 _id: sauceId
                             }, {
@@ -173,8 +177,8 @@ exports.likeDislikeSauce = (req, res, next) => {
                             }))
                             .catch((error) => res.status(400).json({
                                 error
-                            }))
-                    }
+                            }));
+                    };
                 })
                 .catch((error) => res.status(404).json({
                     error
@@ -183,6 +187,7 @@ exports.likeDislikeSauce = (req, res, next) => {
 
         case -1:
             // troisieme cas l'utilisateur met un dislike a la sauce
+            // Mise a jour de la base de donnee
             Sauce.updateOne({
                     _id: sauceId
                 }, {
@@ -200,10 +205,10 @@ exports.likeDislikeSauce = (req, res, next) => {
                 })
                 .catch((error) => res.status(400).json({
                     error
-                }))
+                }));
             break;
 
         default:
             console.log(error);
-    }
-}
+    };
+};
