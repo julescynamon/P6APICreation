@@ -1,6 +1,7 @@
 const Sauce = require('../models/sauces');
 // Mise en place du package fs pour interagir avec le système de fichiers du serveur.
 const fs = require('fs');
+const { error } = require('console');
 
 // Middleware pour recuperer toutes les sauces enregistrer
 exports.getAllSauces = (req, res, next) => {
@@ -66,13 +67,18 @@ exports.updateSauce = (req, res, next) => {
             ...sauceModel,
             _id: req.params.id
         })
-        .then(() => res.status(200).json({
-            message: 'Objet modifié !'
-        }))
-        .catch(error => res.status(400).json({
+        .then((sauce) => {
+            const filename = sauce.imageUrl.split('/images/')[1]
+            fs.unlink(`images/${filename}`, (err) => {
+                if (error) throw error
+            })
+            res.status(200).json({
+                message: "Sauce modifiée !"
+            })
+        })
+        .catch((error) => res.status(400).json({
             error
         }));
-
 };
 
 // Middleware pour supprimer une sauce deja presente dans la base de donnee et appartenant bien au meme userId
@@ -134,7 +140,6 @@ exports.likeDislikeSauce = (req, res, next) => {
 
         case 0:
             // deuxieme cas l'utilisateur mais 0 like a la sauce
-            // 
             Sauce.findOne({
                     _id: sauceId
                 })

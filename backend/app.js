@@ -39,8 +39,6 @@ app.use((req, res, next) => {
 //intercerpte les requetes de type json et donne accès au corps de la requète remplace body-parser
 app.use(express.json());
 
-
-
 // Misen place des connexions aux routes
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
