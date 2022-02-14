@@ -61,7 +61,7 @@ exports.updateSauce = (req, res, next) => {
     } : {
         ...req.body
     };
-    Sauce.updateOne({
+    Sauce.findOneAndUpdate({
             _id: req.params.id
         }, {
             ...sauceModel,
@@ -69,7 +69,7 @@ exports.updateSauce = (req, res, next) => {
         })
         .then((sauce) => {
             const filename = sauce.imageUrl.split('/images/')[1]
-            fs.unlink(`images/${filename}`, (err) => {
+            fs.unlink(`images/${filename}`, (error) => {
                 if (error) throw error
             })
             res.status(200).json({
