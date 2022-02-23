@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const user = require('../models/user');
+
 require('dotenv').config();
 
 // Mise ne place d'un middleware d'authentification par token
