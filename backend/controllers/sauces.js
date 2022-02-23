@@ -31,13 +31,11 @@ exports.getOneSauce = (req, res, next) => {
 exports.createSauce = (req, res, next) => {
     // récupérer les champs dans le corps de la requête
     const sauceModel = JSON.parse(req.body.sauce);
-    delete sauceModel._id;
     // nouvelle Sauce
     const sauce = new Sauce({
-
         ...sauceModel,
         // résolution de l'URL de l'image
-        imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+        imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
     });
     // enregistrer l'objet dans la BDD avec une promesse
     sauce.save()
@@ -98,40 +96,42 @@ exports.deleteSauce = (req, res, next) => {
                     error: new Error('Unauthorized request!')
                 });
             }
+
+            // // Je verifie avant de supprimer l'image dans la BD qu'il n'y a pas d'erreur
+            // Sauce.transaction(async () => {
+            //     const rmImage = new Promise((resolve, reject) => {
+            //         fs.unlink(`images/${filename}`, (err) => {
+            //             if (err) {
+            //                 reject(err);
+            //             } else {
+            //                 resolve();
+            //             };
+            //         });
+            //     });
+            //     await rmImage;
+            //     await Sauce.deleteOne();
+            // });
             const filename = sauce.imageUrl.split('/images/')[1];
-            // Je verifie avant de supprimer l'image dans la BD qu'il n'y a pas d'erreur
-            Sauce.transaction(async () => {
-                const rmImage = new Promise((resolve, reject) => {
-                    fs.unlink(`images/${filename}`, (err) => {
-                        if (err) {
-                            reject(err);
-                        } else {
-                            resolve();
-                        };
-                    });
-                });
-                await rmImage;
-                await Sauce.deleteOne();
+            // supprime le fichier puis effectue le callback qui supprime de la BDD
+            fs.unlink(`images/${filename}`, () => {
+                Sauce.deleteOne({
+                        _id: req.params.id
+                    }).then(
+                        () => {
+                            res.status(200).json({
+                                message: 'Deleted!'
+                            });
+                        })
+                    .catch(
+                        (error) => {
+                            res.status(400).json({
+                                error: error
+                            });
+                        }
+                    );
             });
         })
-    // supprime le fichier puis effectue le callback qui supprime de la BDD
-    fs.unlink(`images/${filename}`, () => {
-        Sauce.deleteOne({
-                _id: req.params.id
-            }).then(
-                () => {
-                    res.status(200).json({
-                        message: 'Deleted!'
-                    });
-                })
-            .catch(
-                (error) => {
-                    res.status(400).json({
-                        error: error
-                    });
-                }
-            );
-    });
+
 
 };
 
