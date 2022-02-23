@@ -1,7 +1,7 @@
 const Sauce = require('../models/sauces');
 // Mise en place du package fs pour interagir avec le système de fichiers du serveur.
 const fs = require('fs');
-const { error } = require('console');
+
 
 // Middleware pour recuperer toutes les sauces enregistrer
 exports.getAllSauces = (req, res, next) => {
@@ -29,19 +29,17 @@ exports.getOneSauce = (req, res, next) => {
 
 // Middleware pour creer une sauce sur le site 
 exports.createSauce = (req, res, next) => {
-
+    // récupérer les champs dans le corps de la requête
     const sauceModel = JSON.parse(req.body.sauce);
     delete sauceModel._id;
+    // nouvelle Sauce
     const sauce = new Sauce({
 
         ...sauceModel,
-        imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
-        likes: 0,
-        dislikes: 0,
-        usersLiked: [' '],
-        usersdisLiked: [' '],
-
+        // résolution de l'URL de l'image
+        imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
     });
+    // enregistrer l'objet dans la BDD avec une promesse
     sauce.save()
         .then(() => res.status(201).json({
             message: 'Objet enregistré !'
@@ -55,6 +53,7 @@ exports.createSauce = (req, res, next) => {
 // Middleware pour modifier une sauce deja presente dans la base de donnee et appartenant bien au meme userId
 exports.updateSauce = (req, res, next) => {
 
+    // opérateur ternaire pour vérifier si fichier image existe ou non
     const sauceModel = req.file ? {
         ...JSON.parse(req.body.sauce),
         imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
@@ -68,6 +67,7 @@ exports.updateSauce = (req, res, next) => {
             _id: req.params.id
         })
         .then((sauce) => {
+            // On fais en sorte de bien supprimer l'ancienne image avant de mettre la nouvelle
             const filename = sauce.imageUrl.split('/images/')[1]
             fs.unlink(`images/${filename}`, (error) => {
                 if (error) throw error
@@ -83,27 +83,55 @@ exports.updateSauce = (req, res, next) => {
 
 // Middleware pour supprimer une sauce deja presente dans la base de donnee et appartenant bien au meme userId
 exports.deleteSauce = (req, res, next) => {
-
     Sauce.findOne({
             _id: req.params.id
         })
         .then(sauce => {
+            // Je verifie que c'est bien l'utilisateur qui supprime son image
+            if (!sauce) {
+                res.status(404).json({
+                    error: new Error('No such Thing!')
+                });
+            }
+            if (sauce.userId !== req.auth.userId) {
+                res.status(400).json({
+                    error: new Error('Unauthorized request!')
+                });
+            }
             const filename = sauce.imageUrl.split('/images/')[1];
-            fs.unlink(`images/${filename}`, () => {
-                Sauce.deleteOne({
-                        _id: req.params.id
-                    })
-                    .then(() => res.status(200).json({
-                        message: 'Objet supprimé !'
-                    }))
-                    .catch(error => res.status(400).json({
-                        error
-                    }));
+            // Je verifie avant de supprimer l'image dans la BD qu'il n'y a pas d'erreur
+            Sauce.transaction(async () => {
+                const rmImage = new Promise((resolve, reject) => {
+                    fs.unlink(`images/${filename}`, (err) => {
+                        if (err) {
+                            reject(err);
+                        } else {
+                            resolve();
+                        };
+                    });
+                });
+                await rmImage;
+                await Sauce.deleteOne();
             });
         })
-        .catch(error => res.status(500).json({
-            error
-        }));
+    // supprime le fichier puis effectue le callback qui supprime de la BDD
+    fs.unlink(`images/${filename}`, () => {
+        Sauce.deleteOne({
+                _id: req.params.id
+            }).then(
+                () => {
+                    res.status(200).json({
+                        message: 'Deleted!'
+                    });
+                })
+            .catch(
+                (error) => {
+                    res.status(400).json({
+                        error: error
+                    });
+                }
+            );
+    });
 
 };
 
