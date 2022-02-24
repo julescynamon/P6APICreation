@@ -11,14 +11,14 @@ module.exports = (req, res, next) => {
         req.auth = { userId };
         if (req.body.userId && req.body.userId !== userId) {
             res.status(403).json({
-                error: newError('403: unauthorized request')
+                error: newError('403: accès refusé ')
             });
         } else {
             next();
         }
     } catch {
         res.status(401).json({
-            error: new Error('Invalid credentials')
+            error: new Error('utilisateur non authentifié')
         });
     }
 };

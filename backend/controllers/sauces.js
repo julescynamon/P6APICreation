@@ -88,12 +88,12 @@ exports.deleteSauce = (req, res, next) => {
             // Je verifie que c'est bien l'utilisateur qui supprime son image
             if (!sauce) {
                 res.status(404).json({
-                    error: new Error('No such Thing!')
+                    error: new Error('Sauce non trouvée !')
                 });
             }
             if (sauce.userId !== req.auth.userId) {
                 res.status(400).json({
-                    error: new Error('Unauthorized request!')
+                    error: new Error('Requête non autorisée !')
                 });
             }
 
@@ -119,7 +119,7 @@ exports.deleteSauce = (req, res, next) => {
                     }).then(
                         () => {
                             res.status(200).json({
-                                message: 'Deleted!'
+                                message: 'Supprimé !'
                             });
                         })
                     .catch(
