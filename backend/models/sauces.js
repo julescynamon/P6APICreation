@@ -1,3 +1,4 @@
+// import mongoose
 const mongoose = require('mongoose');
 
 // Creation d'un schema de donnee pour la base de donnee de nos sauces
@@ -49,5 +50,5 @@ const saucesShema = mongoose.Schema({
 
 
 
-
+// export du modèle terminé : nom + schema
 module.exports = mongoose.model('Sauce', saucesShema);

@@ -6,6 +6,8 @@ const mongoose = require('mongoose');
 const helmet = require('helmet');
 // mise en place du package path pour accéder au path de notre serveur
 const path = require('path');
+
+// import des routeurs
 const userRoutes = require('./routes/user');
 const saucesRoutes = require('./routes/sauces');
 
@@ -39,9 +41,13 @@ app.use((req, res, next) => {
 //intercerpte les requetes de type json et donne accès au corps de la requète remplace body-parser
 app.use(express.json());
 
-// Misen place des connexions aux routes
+
+
+// Nous devons autoriser express à servir les fichiers publics afin de pouvoir diffuser les images téléchargées.
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
+// Misen place des connexions aux routes
+// Routes : methode app.use permet d'attribuer un middlewre à une route spécifique.
 app.use('/api/auth', userRoutes);
 app.use('/api/sauces', saucesRoutes);
 

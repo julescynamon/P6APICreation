@@ -1,3 +1,4 @@
+// import du modèle de Sauce
 const Sauce = require('../models/sauces');
 // Mise en place du package fs pour interagir avec le système de fichiers du serveur.
 const fs = require('fs');
@@ -125,14 +126,17 @@ exports.deleteSauce = (req, res, next) => {
 // Middleware pour gerer les likes et dislikes de mon application
 exports.likeDislikeSauce = (req, res, next) => {
 
+    // récupère le champs likes
     let like = req.body.like;
+    // récupère le userId
     let userId = req.body.userId;
+    // récupère l'id de l'URL
     let sauceId = req.params.id;
 
     switch (like) {
         // premier cas l'utilisateur mais un like a la sauce
         case 1:
-            // Mise a jour de la base de donnee
+            // Mise a jour de la base de donnee 
             Sauce.updateOne({
                     _id: sauceId
                 }, {
