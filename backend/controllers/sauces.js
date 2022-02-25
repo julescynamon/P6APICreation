@@ -85,7 +85,7 @@ exports.deleteSauce = (req, res, next) => {
             _id: req.params.id
         })
         .then(sauce => {
-            // Je verifie que c'est bien l'utilisateur qui supprime son image
+            // Je verifie que l'on trouve bien la sauce et que c'est bien l'utilisateur qui supprime sa sauce
             if (!sauce) {
                 res.status(404).json({
                     error: new Error('Sauce non trouvée !')
@@ -97,20 +97,6 @@ exports.deleteSauce = (req, res, next) => {
                 });
             }
 
-            // // Je verifie avant de supprimer l'image dans la BD qu'il n'y a pas d'erreur
-            // Sauce.transaction(async () => {
-            //     const rmImage = new Promise((resolve, reject) => {
-            //         fs.unlink(`images/${filename}`, (err) => {
-            //             if (err) {
-            //                 reject(err);
-            //             } else {
-            //                 resolve();
-            //             };
-            //         });
-            //     });
-            //     await rmImage;
-            //     await Sauce.deleteOne();
-            // });
             const filename = sauce.imageUrl.split('/images/')[1];
             // supprime le fichier puis effectue le callback qui supprime de la BDD
             fs.unlink(`images/${filename}`, () => {
