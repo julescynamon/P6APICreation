@@ -7,6 +7,7 @@ const jwt = require('jsonwebtoken')
 // import du package de cryptage cryptojs pour plus de securite pour le mail
 const cryptojs = require('crypto-js');
 
+// mise en place de DotEnv pour recuperer les clefs secrete sans avoir a les mettres dans le code en dur.
 require('dotenv').config();
 
 // Middleware pour enregistrer un nouvel utilisateur

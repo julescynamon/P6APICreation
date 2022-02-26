@@ -176,7 +176,7 @@ exports.likeDislikeSauce = (req, res, next) => {
                                 }
                             })
                             .then(() => res.status(200).json({
-                                message: `L'utilisateur reste neutre`
+                                message: "Suppression du like"
                             }))
                             .catch((error) => res.status(400).json({
                                 error
@@ -196,7 +196,7 @@ exports.likeDislikeSauce = (req, res, next) => {
                                 }
                             })
                             .then(() => res.status(200).json({
-                                message: `L'utilisateur reste neutre`
+                                message: "Suppression du dislike"
                             }))
                             .catch((error) => res.status(400).json({
                                 error
