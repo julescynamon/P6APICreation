@@ -21,3 +21,12 @@ If your browser fails to launch, or shows a 404 error, navigate your browser to 
 The app should reload automatically when you make a change to a file.
 
 Use `Ctrl+C` in the terminal to stop the local server.
+
+
+## ENVIRONMENTAL VARIABLES ##
+
+The file .env provides these environmental variables :
+
+- KEY_EMAIL_SECRET: "a random number and letter"
+- SECRET_MONGOOSE: "yours secret keys of mongoose"
+- SECRET_TOKEN: "a random number and letter"
