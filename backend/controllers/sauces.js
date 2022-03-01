@@ -54,7 +54,8 @@ exports.updateSauce = (req, res, next) => {
 
     // opérateur ternaire pour vérifier si fichier image existe ou non
     const sauceModel = req.file ? {
-        ...JSON.parse(req.body.sauce),
+        // On ne parse que certains elements du tableau pour eviter que l'utilisateur puisse mettre le nombre de like qu'il veut a sa sauce
+        ...JSON.parse(req.body.userID, req.body.name, req.body.manufacturer, req.body.description, req.body.mainPepper, req.body.imageUrl, req.body.heat),
         imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
     } : {
         ...req.body
@@ -97,7 +98,7 @@ exports.deleteSauce = (req, res, next) => {
                     error: new Error('Sauce non trouvée !')
                 });
             }
-            if (req.auth.userId!==sauce.userId  ) {
+            if (req.auth.userId !== sauce.userId) {
                 res.status(400).json({
                     error: new Error('Requête non autorisée !')
                 });
