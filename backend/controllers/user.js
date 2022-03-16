@@ -58,8 +58,8 @@ exports.login = (req, res, next) => {
                 .then(valid => {
                     if (!valid) {
                         return res.status(401).json({
-                            error: 'Mot de passe incorrect !'
-                        });
+							error: "Utilisateur non trouvé !",
+						});
                     }
                     res.status(200).json({
                         /* vérifier le token à chaque fois avec la fonction 
