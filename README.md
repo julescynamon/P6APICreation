@@ -3,7 +3,7 @@
 ## Installation ##
 
 Here are the dependancies you need to install:
-- NodeJS 16.00.
+- NodeJS 16.13.1
 - Angular CLI 13.2.2.
 - node-sass : make sure to use the corresponding version to NodeJS. For Node 16.0 for instance, you need node-sass in version 6.0.
 

@@ -75,7 +75,7 @@ exports.updateSauce = (req, res, next) => {
 			});
 	}
 
-	//on ne prends que les clefs à être modifiés
+	//on ne prends que les clefs destiné à être modifiés
 	const { userId, name, manufacturer, description, mainPepper, heat } =
 		//on parse le contenu de la requète en json lorsqu'on a un fichier sinon on récupère directement le contenu au format json
 		req.file ? JSON.parse(req.body.sauce || "") : req.body;
